@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>高中人格测试 · 校园SBTI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f5f7fc 0%, #e9eef4 100%);
+            font-family: system-ui, -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Roboto, Helvetica, sans-serif;
+            padding: 2rem 1rem;
+            color: #1e2a3e;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* 头部 */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1e3c72, #2b4c7c);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .header p {
+            color: #4a627a;
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .badge {
+            background: #fff0db;
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            color: #b45f1b;
+            margin-top: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* 进度条 */
+        .progress-area {
+            background: white;
+            border-radius: 60px;
+            padding: 0.2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            height: 8px;
+            border-radius: 60px;
+            width: 0%;
+            transition: width 0.2s ease;
+        }
+        .q-counter {
+            text-align: right;
+            font-size: 0.8rem;
+            color: #5b6e8c;
+            margin-top: 6px;
+        }
+
+        /* 题目卡片 */
+        .question-card {
+            background: white;
+            border-radius: 32px;
+            padding: 1.6rem 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.02);
+            transition: all 0.2s;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .q-title {
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 1.2rem;
+            background: #f1f5f9;
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            color: #1e293b;
+        }
+
+        .q-text {
+            font-size: 1.08rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+            color: #0f172a;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            background: #f8fafc;
+            padding: 0.8rem 1rem;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.15s;
+            cursor: pointer;
+        }
+        .option.selected {
+            background: #eef2ff;
+            border-color: #818cf8;
+            box-shadow: 0 2px 6px rgba(99,102,241,0.1);
+        }
+        .option-letter {
+            font-weight: 800;
+            background: white;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 60px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            color: #334155;
+        }
+        .option-text {
+            flex: 1;
+            line-height: 1.4;
+            color: #1e293b;
+        }
+        .option input {
+            display: none;
+        }
+
+        /* 按钮 */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        button {
+            background: white;
+            border: 1px solid #cbd5e1;
+            padding: 0.7rem 1.6rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #1e293b;
+        }
+        button.primary {
+            background: #1e3c72;
+            border: none;
+            color: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        button.primary:hover {
+            background: #0f2b4f;
+            transform: scale(0.98);
+        }
+        button:hover:not(.primary) {
+            background: #f1f5f9;
+        }
+
+        /* 结果卡片 */
+        .result-card {
+            background: white;
+            border-radius: 40px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+        }
+        .result-name {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1e3c72, #8b5cf6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin: 0.5rem 0;
+        }
+        .result-code {
+            font-family: monospace;
+            background: #f1f5f9;
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            margin: 1rem 0;
+        }
+        .result-desc {
+            color: #334155;
+            margin-top: 1rem;
+            line-height: 1.5;
+        }
+        .restart-btn {
+            margin-top: 2rem;
+            background: #1e293b;
+            color: white;
+            border: none;
+            padding: 0.7rem 2rem;
+        }
+        .hidden {
+            display: none;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #7c8ba0;
+            margin-top: 2rem;
+        }
+        @media (max-width: 600px) {
+            .question-card { padding: 1.2rem; }
+            .q-text { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🏫 高中人格图鉴 · 校园SBTI</h1>
+        <p>课间、考场、寝室走廊 —— 测测你是哪种高中「显眼包」</p>
+        <div class="badge">⚠️ 仅供娱乐 · 灵感源于真实高中</div>
+    </div>
+
+    <div id="quizApp">
+        <!-- 进度条 -->
+        <div class="progress-area">
+            <div class="progress-bar" id="progressBar"></div>
+            <div class="q-counter" id="qCounter">第1 / 20题</div>
+        </div>
+
+        <!-- 题目渲染区 -->
+        <div id="questionsContainer"></div>
+
+        <!-- 导航按钮 -->
+        <div class="nav-buttons">
+            <button id="prevBtn" disabled>← 上一题</button>
+            <button id="nextBtn" class="primary">下一题 →</button>
+        </div>
+    </div>
+
+    <div id="resultContainer" class="hidden"></div>
+    <footer>⚡ 每个选项无对错，凭第一感觉选择 · 结果映射校园16型人格</footer>
+</div>
+
+<script>
+    // ---------- 题目数据 (20题, 顺序从1到20, 选项A~E) ----------
+    const questions = [
+        { text: "课间10分钟，你通常的行动轨迹是？", options: ["会主动串班去找朋友，哪怕被非常歪的班主任抓包也无所畏惧", "主动找朋友玩，或者路过朋友座位的会故意捉弄他然后聊几句", "一下课朋友就会来找我闹，基本不用动，享受被rua", "偶尔有人找我借东西或问作业，说完就安静了。没人找我我就睡觉", "总是一个人行动，最好谁都别来打扰"] },
+        { text: "老师让小组为单位上台讲解一道题，你通常是组里哪种人？", options: ["主动抢下讲题位，享受被全班注视的爽感", "被迫当了组长，虽然不想当，但既然当了就会认真分配任务，最后时刻还得上去补充", "积极配合收集资料，尽管干活不出声，但缺了你不行", "被分到什么就做什么，不主动也不拒绝", "“看不见我看不见我……” 小组讨论时会潜入厕所的全程隐身人"] },
+        { text: "在操场运动时，有人突然对你说：“我也是同好，我们加个微信认识一下吧！” 你会怎么反应？", options: ["“好啊好啊！”立刻掏出纸笔写下一串神秘字符，顺便问对方平时在哪运动、喜欢那些运动，当场变成运动搭子", "有点开心，加完微信后聊两句“你也喜欢这个啊”，但不会主动联系，等对方开口", "“可以吧。” 加了但再也没有交流，唯一的互动是pyq点赞，之后大概率当僵尸好友", "内心纠结：“这也太尴尬了吧……！” 然后说“我微信不怎么加陌生人，要不加我原神uid…”", "假装没听见，加速跑开，内心OS：救命千万别缠绕上我"] },
+        { text: "你的牛逼班主任发明了“古法抽签”排座位——三年下来你和全班坐了个遍。你的真实感受是？", options: ["“好爽啊！” 每次开盲盒都可以交新朋友，甚至开始期待下次抽签换到谁，又可以培养新的死士了！", "至少不会只困在小圈子里，和不同人坐能聊不同的话题，也不担心和讨厌的人坐太久", "无所谓，坐谁旁边都一样，反正下课还是找认识的人说话", "好累，刚和一个人混熟又要换，每次重新适应很消耗能量", "痛苦面具中。只想和固定那一两个人坐，频繁换座让我想逃离这个愚蠢的班级。"] },
+        { text: "回到寝室后，你通常？", options: ["挨个寝室串门，直到阿姨抓人冲刺回去", "夜聊发起人：“给你们讲我今天遇到的事……” 主动带话题，聊八卦/吐槽老师/讲鬼故事", "偶尔插一句，大部分时间只是听着，笑出声但不说话", "掏出mp4带上耳机干自己的事（写日记/看小说/刷题），有人叫我我才回应", "感觉有点吵但不好意思说，假装睡着了，希望他们快点结束"] },
+        { text: "考试前一周，你的复习状态是？", options: ["咖啡茶叶备齐，挑灯夜读，课本笔记、错题本全过一遍，不复习完不睡觉", "重点复习老师画的范围和自己薄弱的地方，把重点和笔记过一遍心里才算有个底", "考前翻翻书，能记多少算多少，反正平时有听一点", "随缘看看，把做过的题扫一眼，看到哪个知识点都是命，会就会，不会也来管不了了", "复习？不存在的。小说mp4准备好，早睡早起心态好，考试全靠直觉和祖坟冒青烟"] },
+        { text: "下课时大家都在教室打闹，你看到你的同桌/目标/竞争对手在埋头刷题，你会？", options: ["“卧槽这么装？不行，我也要刷” 立刻掏出题册开干", "心里一紧默默记下来，决定明天再多刷一套题，悄悄超过他", "心里咯噔一下…但还是继续和同学聊天，只是玩得没那么安心了", "完全不慌，他刷他的，我玩我的。反正成绩也不是靠这一会儿决定的", "管不了这么多了，第五人格启动"] },
+        { text: "月考成绩和排名终于出来了，你的第一反应是？", options: ["立刻去看排名，和前几名对比，分析哪科拉胯了。如果没进目标/没超过某人，接下来一周就会加倍努力", "装作不在意，等人少了偷偷去看，或者让朋友帮忙查。分析自己的总分，看到排名上升会暗爽，下降了也会难受", "看一眼，大概知道在哪个位置就行，心里有个数，但不会纠结太久，该干嘛干嘛", "只要没垫底就行，排名什么的无所谓", "…排名是什么？能吃吗？"] },
+        { text: "你那如超雄般的老师放话了：每天必须去他办公室讲一道错题，否则后果自负。你会怎么做？", options: ["每天提前准备好最经典的错题，不仅讲清楚，还主动问“老师我还有一道不太懂，能顺便讲了吗？” 顺便刷存在感", "非常畏惧，但还是会老老实实整理错题，提前对着空气练三遍才有勇气走进办公室，确保不被骂", "临时抱佛脚，每天课间随便找道错题，背个答案就去讲，主打一个“过关就行”，讲完就跑，多待一秒都是煎熬", "能拖就拖，今天说“忘了带错题本”，明天说“我其他科作业有点多…”，实在逃不掉再去敷衍一下", "不去，挨骂就挨骂，不过是几分钟的事。反正我就是不想面对那张脸"] },
+        { text: "面对每天的作业，你通常是？", options: ["任劳任怨的供应商：自己认真做完，同学来问还会耐心讲解，甚至主动把过程写在旁边供参考", "独立战士：基本都是自己完成，觉得作业就是用来检验自己的", "鉴赏家：写完题就去找几个同学共同品鉴答案", "搬运公：遇事不决直接抄答案，只求写完交差，内容是什么不重要", "绝缘体：能拖就拖，能不交就不交，能不做就不做"] },
+        { text: "突然听到风声：今天刘主任要突击检查，而你恰好带了一点违禁品。你会怎么做？", options: ["不，我从不带违禁品，查我也没用", "主动把违禁品上交班主任，或者提前让走读生带走，干干净净迎接检查", "藏到最隐蔽的地方，但心里慌得一批，祈祷别被翻到", "淡定地把东西塞进书包夹层，然后正常上课", "懒得藏，最后一刻还在玩。查到就随机应变，大不了就被没收"] },
+        { text: "你的班主任说必须穿校服全套，但你觉得校服丑哭了，你会怎么做？", options: ["穿就穿吧，校服也挺方便，省得每天想搭配", "全套穿在外面，但里面穿自己的T恤，跑操结束就脱了校服换自己的外套", "只穿上衣，裤子必须穿自己的私服。得到要跑操的通知时拿出一条校裤直接套在外面", "薛定谔的校服，穿与不穿看今天心情", "坚决不穿，宁愿被扣分也不穿那破布。甚至想把校服剪了当抹布"] },
+        { text: "阿姨早上7:00准时锁寝室门，晚出者登记通报。你平时的起床习惯是？", options: ["每天6:30准时起床，早早就出寝室门，从不卡点，绝不违规", "小睡一会等6:45起来快速收拾，赶在6:55左右出门，留够5分钟缓冲，安全第一", "每天极限操作，经常在锁门前一分钟冲出去", "逃脱大师：趁阿姨锁门间隙溜出去或者从其他路线成功逃离", "直接摆烂：被锁了于是继续睡去，等被发现时已经过去一个早自习"] },
+        { text: "家长会那天，其他班的同学都提前放假拿到手机了。你的班主任却要求你们在空教室写完一套数学卷子。你会？", options: ["安静地自己写，不会受周边玩闹的同学影响。班主任固然很恶心，但为了自己还是尽力去写", "加快速度写，做完立刻停笔也懒得管正确率。这种情况写完已是功德圆满", "边写边和朋友吐槽，写着写着就开始聊起天", "写个名字和选择题，大题随便写个“解”字。拿出小说/手机消磨时间", "爱写不写，老子才是老大"] },
+        { text: "今天下午要周测，你会怎么做？", options: ["再多看看书，尽力靠自己完成。考多少分都认，毕竟这样才能检测自己的水平", "心里想过“要是有答案就好了”，但不会真去要。最多考完和同桌对一下选择题", "偷偷问周围的人“你们有答案吗”，有就要，没有就算了，不强求，还是靠自己为主", "查其他班的考试时间，利用时间差从考完的班级那获得答案，提前背好", "考试时拿出手机直接打开作业帮搜题"] },
+        { text: "明明你的问题并不大，老师却当着全班的面狠狠骂了你一顿，用词还很难听。你的内心活动是？", options: ["左耳进右耳出，骂完就忘。有的老师就是这样喜欢展现自己，你理解一切", "心里有点不爽，但表面平静。虽然感觉不舒服，还是该干嘛干嘛。不让这件事影响一天的心情", "心里已经骂了老师八百遍，下课跟朋友不停吐槽", "当场脸红到耳朵根，晚上睡前会想要偷偷哭泣，觉得好委屈，一整天都缓不过来", "非常崩溃，觉得被老师针对了，甚至想请假逃离这个让你感觉不公的地方"] },
+        { text: "你刚考完绵中卷，对完答案发现总分可能还不到400。你的第一反应是？", options: ["666主播也是考到了一个380的高分，绵中卷这边我们直接给到一个夯", "有点难受，但安慰自己“反正这种卷子大家都觉得难”，然后继续该干嘛干嘛", "“完蛋了难道我是笨蛋！” emo了一天，但第二天又调理好了，继续该干嘛干嘛", "感觉很破防，害怕自己考不上好大学，觉得自己是不是智商有问题，一整天不想说话", "怀疑人生，觉得自己不配读书，晚上躲被子里流眼泪，想要回家休息"] },
+        { text: "你在走廊里走着，看到你特别讨厌深恶痛绝的那个人朝你的方向过来。你会？", options: ["正常走过去，心里毫无波澜，这种人对我来说就是空气，因为queen never cry", "装作很忙，自然避开对视，过去了就忘了，不影响心情", "心里翻个白眼，绕路走或者加快步伐，走过去之后会和朋友吐槽几句", "瞬间心情变差，走过去后会找朋友发消息吐槽“我刚碰到那个sb了”，脑子里开始回放他干过的恶心事", "整个人都不好了，直接掉头换条路走，宁愿绕远也不想碰见他"] },
+        { text: "你发现有个平时关系还不错的朋友突然不理你了，或者听说有人在背后说你坏话。你的内心活动是？", options: ["爱理不理，想找我玩的人已经排到法国巴黎了。该吃吃该喝喝，甚至懒得问原因", "心里稍微咯噔一下，但转念一想“反正毕业了也不会有太多联系”，很快就翻篇了", "有点难受，但不会主动去问，会观察几天，如果对方一直这样，那就顺其自然吧", "反复想“这是我的问题吗”，晚上翻来覆去睡不着", "感觉全世界都讨厌自己，感觉生理性恶心，甚至想请假"] },
+        { text: "你曾经考过年级前几，或者在某方面有过高光时刻。但现在的你成绩/状态已经归于普通，有时甚至会跟不上。过往的记忆涌现，你内心是？", options: ["这至少证明我并非一无是处。而现在我只需要专注于当下，该学学该玩玩，不去过多纠结", "偶尔会怀念一下，但知道高中不一样了，接受现实，努力追一追，追不上也不强求", "有时会失落，于是将难过转化为新的动力", "经常回忆以前的经历，越想越难受，觉得自己是不是变笨了，为什么会变成现在这样，晚上会偷偷emo", "觉得现在的自己是个废物，甚至不想让别人知道自己曾经的成绩，怕被笑话。开始摆烂：“反正也回不去了”"] }
+    ];
+
+    // 维度分组: 前5题社交(E/I), 6-10学习(R/F), 11-15规则(O/B), 16-20情绪(T/G)
+    // 每个选项分值 A=5, B=4, C=3, D=2, E=1 (分数越高越倾向左极)
+    // 社交左极=E(外向), 学习左极=R(卷), 规则左极=O(守规), 情绪左极=T(钢铁)
+
+    // 16种人格（代码唯一）理想向量（原始分范围5-25，左极=25，右极=5）
+    const personalities = [
+        { name: "时间管理大师", code: "TIME", vector: [25,25,25,25], desc: "高效卷王，社交学习双开花，心态稳如老狗。" },
+        { name: "顶级易碎品", code: "FRAGILE", vector: [25,25,25,5], desc: "卷王中的玻璃心，成绩顶尖但一碰就碎。" },
+        { name: "叛逆学霸", code: "REBEL", vector: [25,25,5,25], desc: "成绩好但浑身反骨，老师又爱又恨。" },
+        { name: "易燃卷王", code: "BOOM", vector: [25,25,5,5], desc: "卷得疯狂，脾气爆炸，易燃易破防。" },
+        { name: "学神", code: "SHEN", vector: [5,25,25,25], desc: "独自刷题的冰山，实力碾压一切。" },
+        { name: "卷心菜", code: "CABB", vector: [5,25,25,5], desc: "想卷但内耗严重，努力却常常崩溃。" },
+        { name: "独狼卷王", code: "LONE", vector: [5,25,5,25], desc: "独自内卷，不守规矩但心态钢铁。" },
+        { name: "忧郁学魔", code: "DEMON", vector: [5,25,5,5], desc: "暗黑内卷者，焦虑敏感又倔强。" },
+        { name: "阳光咸鱼", code: "SUNFISH", vector: [25,5,25,25], desc: "佛系但外向，守规矩且心态超好。" },
+        { name: "老好人", code: "NICE", vector: [25,5,25,5], desc: "热心助人，默默委屈，偷偷玻璃心。" },
+        { name: "气氛组", code: "VIBE", vector: [25,5,5,25], desc: "班级开心果，叛逆不学习但心大。" },
+        { name: "叛逆小丑", code: "CLOWN", vector: [25,5,5,5], desc: "爱出风头又敏感，表面嘻嘻哈哈内心易碎。" },
+        { name: "佛系隐士", code: "ZEN", vector: [5,5,25,25], desc: "角落里的淡定哥/姐，与世无争。" },
+        { name: "蘑菇", code: "MUSH", vector: [5,5,25,5], desc: "安静透明，乖巧但内心容易受伤。" },
+        { name: "摸鱼艺术家", code: "ART", vector: [5,5,5,25], desc: "上课摸鱼王者，叛逆但心态稳如泰山。" },
+        { name: "病弱隐士", code: "SICK", vector: [5,5,5,5], desc: "身体心理双脆弱，佛系又叛逆，躲在角落emo。" }
+    ];
+
+    // 存储答案 (每题分值 1-5)
+    let answers = new Array(20).fill(null);
+
+    let currentIndex = 0;
+    const container = document.getElementById('questionsContainer');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressBar = document.getElementById('progressBar');
+    const qCounter = document.getElementById('qCounter');
+    const quizApp = document.getElementById('quizApp');
+    const resultDiv = document.getElementById('resultContainer');
+
+    // 渲染当前题目
+    function renderQuestion() {
+        const q = questions[currentIndex];
+        const selectedVal = answers[currentIndex];
+        let html = `<div class="question-card">
+                        <div class="q-title">问题 ${currentIndex+1}</div>
+                        <div class="q-text">${q.text}</div>
+                        <div class="options" id="options-group">`;
+        const letters = ['A', 'B', 'C', 'D', 'E'];
+        q.options.forEach((opt, idx) => {
+            const val = 5 - idx; // A=5, B=4, C=3, D=2, E=1
+            const isSelected = (selectedVal === val);
+            html += `<div class="option ${isSelected ? 'selected' : ''}" data-val="${val}">
+                        <div class="option-letter">${letters[idx]}</div>
+                        <div class="option-text">${opt}</div>
+                    </div>`;
+        });
+        html += `</div></div>`;
+        container.innerHTML = html;
+
+        // 绑定选项点击事件
+        document.querySelectorAll('.option').forEach(optDiv => {
+            optDiv.addEventListener('click', (e) => {
+                const val = parseInt(optDiv.dataset.val);
+                answers[currentIndex] = val;
+                // 更新UI选中样式
+                document.querySelectorAll('.option').forEach(div => div.classList.remove('selected'));
+                optDiv.classList.add('selected');
+                // 自动跳到下一题（可选，便于手机）
+                // 但为了体验，不自动跳，让用户点下一题
+            });
+        });
+        updateButtons();
+        updateProgress();
+    }
+
+    function updateProgress() {
+        const answered = answers.filter(a => a !== null).length;
+        const percent = (answered / 20) * 100;
+        progressBar.style.width = percent + '%';
+        qCounter.innerText = `已完成 ${answered} / 20 题`;
+    }
+
+    function updateButtons() {
+        prevBtn.disabled = (currentIndex === 0);
+        if (currentIndex === 19) {
+            nextBtn.innerText = '📊 提交测试';
+        } else {
+            nextBtn.innerText = '下一题 →';
+        }
+    }
+
+    // 计算得分向量 [社交, 学习, 规则, 情绪] 原始分范围5-25
+    function computeScores() {
+        let scores = [0,0,0,0]; // 社交,学习,规则,情绪
+        for(let i=0; i<20; i++) {
+            let val = answers[i];
+            if(val === null) return null; // 未完成
+            if(i < 5) scores[0] += val;      // 社交
+            else if(i < 10) scores[1] += val; // 学习
+            else if(i < 15) scores[2] += val; // 规则
+            else scores[3] += val;            // 情绪
+        }
+        return scores;
+    }
+
+    // 欧氏距离匹配人格
+    function matchPersonality(scores) {
+        let best = null;
+        let minDist = Infinity;
+        for(let p of personalities) {
+            let dist = 0;
+            for(let d=0; d<4; d++) {
+                let diff = scores[d] - p.vector[d];
+                dist += diff * diff;
+            }
+            dist = Math.sqrt(dist);
+            if(dist < minDist) {
+                minDist = dist;
+                best = p;
+            }
+        }
+        return best;
+    }
+
+    // 显示结果
+    function showResult() {
+        const scores = computeScores();
+        if(!scores) {
+            alert("请先完成全部20道题～");
+            return;
+        }
+        const personality = matchPersonality(scores);
+        // 生成描述文本
+        let descText = personality.desc;
+        if(personality.code === "TIME") descText = "高效能人士，课间串班+熬夜刷题+心态稳，班级隐藏大佬。";
+        if(personality.code === "FRAGILE") descText = "成绩顶配但心理脆皮，考好了笑，考差了哭，班主任重点关爱对象。";
+        if(personality.code === "REBEL") descText = "学霸中的刺头，分数漂亮但不爱守规矩，老师又爱又恨。";
+        if(personality.code === "BOOM") descText = "卷王+火药桶，谁打扰学习就炸，炸完自己先破防。";
+        if(personality.code === "SHEN") descText = "独自登顶的学神，不社交不惹事，成绩单就是存在感。";
+        if(personality.code === "CABB") descText = "卷心菜本人：想卷卷不动，躺又躺不平，日常焦虑。";
+        if(personality.code === "LONE") descText = "独狼卷王，自己学自己的，不服常规，内心钢铁。";
+        if(personality.code === "DEMON") descText = "忧郁学魔，偷偷内卷到深夜，看到别人进步就emo。";
+        if(personality.code === "SUNFISH") descText = "阳光咸鱼，开心第一，守规矩不惹事，心态超好。";
+        if(personality.code === "NICE") descText = "老好人，有求必应，但自己受委屈只敢偷偷哭。";
+        if(personality.code === "VIBE") descText = "气氛组担当，不学习但超会玩，叛逆但心大。";
+        if(personality.code === "CLOWN") descText = "叛逆小丑，台上显眼包，台下玻璃心。";
+        if(personality.code === "ZEN") descText = "佛系隐士，一切随缘，教室角落的活菩萨。";
+        if(personality.code === "MUSH") descText = "蘑菇型透明人，乖巧安静，内心敏感易碎。";
+        if(personality.code === "ART") descText = "摸鱼艺术家，上课摸出风格，叛逆但心态稳。";
+        if(personality.code === "SICK") descText = "病弱隐士，体弱心脆，佛系且叛逆（但不敢明着来）。";
+
+        const resultHtml = `
+            <div class="result-card">
+                <div style="font-size:1rem; color:#4b5563;">✨ 你的高中人格 ✨</div>
+                <div class="result-name">${personality.name}</div>
+                <div class="result-code">${personality.code} · ${personality.vector.map(v=>v===25?'左':'右').join('')}</div>
+                <div class="result-desc">${descText}</div>
+                <button class="restart-btn" id="restartTest">🔄 重新测试</button>
+            </div>
+        `;
+        quizApp.classList.add('hidden');
+        resultDiv.classList.remove('hidden');
+        resultDiv.innerHTML = resultHtml;
+        document.getElementById('restartTest').addEventListener('click', () => {
+            answers = new Array(20).fill(null);
+            currentIndex = 0;
+            quizApp.classList.remove('hidden');
+            resultDiv.classList.add('hidden');
+            renderQuestion();
+            updateProgress();
+        });
+    }
+
+    // 下一题 / 提交
+    function next() {
+        if(answers[currentIndex] === null) {
+            alert("请先选择一个选项～");
+            return;
+        }
+        if(currentIndex === 19) {
+            // 提交
+            showResult();
+        } else {
+            currentIndex++;
+            renderQuestion();
+        }
+    }
+
+    function prev() {
+        if(currentIndex > 0) {
+            currentIndex--;
+            renderQuestion();
+        }
+    }
+
+    prevBtn.addEventListener('click', prev);
+    nextBtn.addEventListener('click', next);
+
+    // 初始化
+    renderQuestion();
+</script>
+</body>
+</html>
